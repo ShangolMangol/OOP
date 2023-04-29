@@ -90,7 +90,7 @@ public class FaceOOPImpl implements FaceOOP
 				statuses.add(status);
 			}
 		}
-		return (StatusIterator) statuses.iterator();
+		return new StatusIteratorImpl(statuses.iterator());
 	}
 
 	@Override

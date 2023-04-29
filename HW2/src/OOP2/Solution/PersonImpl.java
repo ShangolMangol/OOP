@@ -88,7 +88,9 @@ public class PersonImpl implements Person {
 	@Override
 	public Iterable<Status> getStatusesPopular()
 	{
-		return getStatusesOrdered(Comparator.comparingInt(Status::getLikesCount).reversed());
+		Comparator<Status> likeCompare = Comparator.comparingInt(Status::getLikesCount).reversed();
+		Comparator<Status> timeCompare = Comparator.comparingInt(Status::getId).reversed();
+		return getStatusesOrdered(likeCompare.thenComparing(timeCompare));
 	}
 
 	@Override
