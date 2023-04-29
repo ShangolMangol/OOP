@@ -1,7 +1,10 @@
 package Tests;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
+import OOP2.Solution.PersonImpl;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -50,4 +53,17 @@ public class Example {
 			Assert.fail();
 		} 
 	}
+
+	@Test
+	public void ArrayListTest()
+	{
+		ArrayList<Person> persons = new ArrayList<>();
+		persons.add(new PersonImpl(1, "aa"));
+		Assert.assertTrue( persons.contains(new PersonImpl(1, "aa")));
+
+		persons.remove(new PersonImpl(2, "aa"));
+
+	}
+
+
 }
