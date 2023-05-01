@@ -43,7 +43,7 @@ public class PersonImpl implements Person {
 	@Override
 	public Status postStatus(String content)
 	{
-		Status newStatus = new StatusImpl(mCurrentStatus, content, this);
+		Status newStatus = new StatusImpl(this, content, mCurrentStatus);
 		mCurrentStatus++;
 		mStatuses.add(newStatus);
 		return newStatus;
