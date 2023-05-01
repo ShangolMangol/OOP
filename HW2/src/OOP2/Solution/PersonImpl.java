@@ -107,4 +107,10 @@ public class PersonImpl implements Person {
 		Person other = (Person) obj;
 		return Objects.equals(other.getId(), mId);
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return mId.hashCode();
+	}
 }
