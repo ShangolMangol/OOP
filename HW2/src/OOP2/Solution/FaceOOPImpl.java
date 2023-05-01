@@ -114,7 +114,7 @@ public class FaceOOPImpl implements FaceOOP
 
 		Map<Person, Integer> ranks = new HashMap<>();
 		Set<Person> visited = new HashSet<>();
-		Queue<Person> personQueue = new PriorityQueue<>();
+		Queue<Person> personQueue = new LinkedList<>();
 
 		//set all nodes rank
 		for (Person p : mUsers)
