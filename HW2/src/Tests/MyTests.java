@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.omg.CORBA.FREE_MEM;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class MyTests
@@ -223,6 +226,132 @@ public class MyTests
         Assert.assertEquals(temp.getId(), Integer.valueOf(1));
         Assert.assertEquals(temp.getContent(), "bb");
         Assert.assertFalse(iter.hasNext());
+
+    }
+
+    @Test
+    public void faceOopTest() throws PersonAlreadyInSystemException,
+            PersonNotInSystemException, SamePersonException, ConnectionAlreadyExistException
+    {
+        Person luke = new PersonImpl(12, "luke");
+        Person leia =new PersonImpl(30, "leia");
+        Person han = new PersonImpl(45, "han");
+        Person lando = new PersonImpl(23, "lando");
+        Person anakin = new PersonImpl(57, "anakin");
+        try
+        {
+            mFace.joinFaceOOP(12, "luke");
+            mFace.joinFaceOOP(30, "leia");
+            mFace.joinFaceOOP(45, "han");
+            mFace.joinFaceOOP(23, "lando");
+            mFace.joinFaceOOP(57, "anakin");
+        } catch (PersonAlreadyInSystemException e)
+        {
+            Assert.fail();
+        }
+        try
+        {
+            mFace.joinFaceOOP(12, "rey");
+        } catch (PersonAlreadyInSystemException e)
+        {
+            Assert.assertTrue(true);
+        }
+
+        Assert.assertEquals(5, mFace.size());
+
+        try
+        {
+            Assert.assertEquals(luke, mFace.getUser(12));
+            Assert.assertEquals(leia, mFace.getUser(30));
+            Assert.assertEquals(han, mFace.getUser(45));
+            Assert.assertEquals(lando, mFace.getUser(23));
+            Assert.assertEquals(anakin, mFace.getUser(57));
+        } catch (PersonNotInSystemException e)
+        {
+            Assert.fail();
+        }
+
+        try
+        {
+            mFace.getUser(123);
+        } catch (PersonNotInSystemException e)
+        {
+            Assert.assertTrue(true);
+        }
+
+
+        luke = mFace.getUser(12);
+        leia = mFace.getUser(30);
+        han = mFace.getUser(45);
+        lando = mFace.getUser(23);
+        anakin = mFace.getUser(57);
+
+        mFace.addFriendship(luke, leia);
+        mFace.addFriendship(luke, han);
+        mFace.addFriendship(han, leia);
+        mFace.addFriendship(leia, lando);
+        mFace.addFriendship(leia, anakin);
+        try
+        {
+            mFace.addFriendship(luke, leia);
+        } catch (ConnectionAlreadyExistException e)
+        {
+            Assert.assertTrue(true);
+        }
+        try
+        {
+            Person rey = new PersonImpl(13, "rey");
+            mFace.addFriendship(luke, rey);
+        } catch (PersonNotInSystemException e)
+        {
+            Assert.assertTrue(true);
+        }
+        try
+        {
+            mFace.addFriendship(luke, luke);
+        } catch (SamePersonException e)
+        {
+            Assert.assertTrue(true);
+        }
+
+        try
+        {
+            mFace.addFriendship(luke, han);
+        } catch (ConnectionAlreadyExistException e)
+        {
+            Assert.assertTrue(true);
+        }
+
+        try
+        {
+            mFace.addFriendship(han, luke);
+        } catch (ConnectionAlreadyExistException e)
+        {
+            Assert.assertTrue(true);
+        }
+
+        mFace.getUser(12).postStatus("greetings");
+        mFace.getUser(30).postStatus("you are my only hope");
+        mFace.getUser(45).postStatus("pokey religions and ancient weapons are no match for a good blaster at your side");
+        mFace.getUser(23).postStatus("wooo hooooo");
+        mFace.getUser(57).postStatus("i hate sand");
+        mFace.getUser(57).postStatus("this is where the fun begins");
+        mFace.getUser(57).postStatus("i've brought peace, freedom, justice, and security to my new empire");
+
+
+        ArrayList<Status> posts= new ArrayList<>((Collection) mFace.getUser(57).getStatusesRecent());
+        posts.get(1).like(luke);
+        posts.get(1).like(han);
+        posts= new ArrayList<>((Collection) mFace.getUser(57).getStatusesPopular());
+        Assert.assertEquals(new StatusImpl(anakin, "this is where the fun begins", posts.get(0).getId()),posts.get(0));
+
+
+        Iterator<Status> iterator = mFace.getFeedByRecent(mFace.getUser(12));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("you are my only hope", iterator.next().getContent());
+        System.out.println(iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
 
     }
 }
