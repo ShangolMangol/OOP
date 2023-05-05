@@ -112,6 +112,9 @@ public class FaceOOPImpl implements FaceOOP
 		if( !mUsers.contains(source) || !mUsers.contains(target))
 			throw new PersonNotInSystemException();
 
+		if(source.equals(target))
+			return 0;
+
 		Map<Person, Integer> ranks = new HashMap<>();
 		Set<Person> visited = new HashSet<>();
 		Queue<Person> personQueue = new LinkedList<>();

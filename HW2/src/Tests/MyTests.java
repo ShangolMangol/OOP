@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.omg.CORBA.FREE_MEM;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class MyTests
@@ -223,6 +226,162 @@ public class MyTests
         Assert.assertEquals(temp.getId(), Integer.valueOf(1));
         Assert.assertEquals(temp.getContent(), "bb");
         Assert.assertFalse(iter.hasNext());
+
+    }
+
+    @Test
+    public void faceOopTest() throws PersonAlreadyInSystemException,
+            PersonNotInSystemException, SamePersonException, ConnectionAlreadyExistException, ConnectionDoesNotExistException
+    {
+        Person luke = new PersonImpl(12, "luke");
+        Person leia =new PersonImpl(30, "leia");
+        Person han = new PersonImpl(45, "han");
+        Person lando = new PersonImpl(23, "lando");
+        Person anakin = new PersonImpl(57, "anakin");
+        mFace.joinFaceOOP(12, "luke");
+        mFace.joinFaceOOP(30, "leia");
+        mFace.joinFaceOOP(45, "han");
+        mFace.joinFaceOOP(23, "lando");
+        mFace.joinFaceOOP(57, "anakin");
+
+        Assert.assertThrows(PersonAlreadyInSystemException.class, ()-> mFace.joinFaceOOP(12, "rey"));
+
+
+        Assert.assertEquals(5, mFace.size());
+
+        Assert.assertEquals(luke, mFace.getUser(12));
+        Assert.assertEquals(leia, mFace.getUser(30));
+        Assert.assertEquals(han, mFace.getUser(45));
+        Assert.assertEquals(lando, mFace.getUser(23));
+        Assert.assertEquals(anakin, mFace.getUser(57));
+
+        Assert.assertThrows(PersonNotInSystemException.class, ()-> mFace.getUser(123));
+
+
+
+        luke = mFace.getUser(12);
+        leia = mFace.getUser(30);
+        han = mFace.getUser(45);
+        lando = mFace.getUser(23);
+        anakin = mFace.getUser(57);
+
+        mFace.addFriendship(luke, leia);
+        mFace.addFriendship(luke, han);
+        mFace.addFriendship(han, leia);
+        mFace.addFriendship(leia, lando);
+        mFace.addFriendship(leia, anakin);
+
+        Person finalLuke = luke;
+        Person finalLeia = leia;
+        Assert.assertThrows(ConnectionAlreadyExistException.class, ()-> mFace.addFriendship(finalLuke, finalLeia));
+        Person rey = new PersonImpl(13, "rey");
+        Assert.assertThrows(PersonNotInSystemException.class, ()-> mFace.addFriendship(finalLuke, rey));
+        Assert.assertThrows(SamePersonException.class, ()-> mFace.addFriendship(finalLuke, finalLuke));
+        Person finalHan = han;
+        Assert.assertThrows(ConnectionAlreadyExistException.class, ()-> mFace.addFriendship(finalLuke, finalHan));
+
+
+        mFace.getUser(12).postStatus("greetings");
+        mFace.getUser(30).postStatus("you are my only hope");
+        mFace.getUser(45).postStatus("pokey religions and ancient weapons are no match for a good blaster at your side");
+        mFace.getUser(23).postStatus("wooo hooooo");
+        mFace.getUser(57).postStatus("i hate sand");
+        mFace.getUser(57).postStatus("this is where the fun begins");
+        mFace.getUser(57).postStatus("i've brought peace, freedom, justice, and security to my new empire");
+
+
+        ArrayList<Status> posts= new ArrayList<>((Collection) mFace.getUser(57).getStatusesRecent());
+        posts.get(1).like(luke);
+        posts.get(1).like(han);
+        posts= new ArrayList<>((Collection) mFace.getUser(57).getStatusesPopular());
+        Assert.assertEquals(new StatusImpl(anakin, "this is where the fun begins", posts.get(0).getId()),posts.get(0));
+
+
+        Iterator<Status> iterator = mFace.getFeedByRecent(mFace.getUser(12));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("you are my only hope", iterator.next().getContent());
+        Assert.assertEquals("pokey religions and ancient weapons are no match for a good blaster at your side", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        iterator = mFace.getFeedByRecent(mFace.getUser(30));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("greetings", iterator.next().getContent());
+        Assert.assertEquals("wooo hooooo", iterator.next().getContent());
+        Assert.assertEquals("pokey religions and ancient weapons are no match for a good blaster at your side", iterator.next().getContent());
+        Assert.assertEquals("i've brought peace, freedom, justice, and security to my new empire", iterator.next().getContent());
+        Assert.assertEquals("this is where the fun begins", iterator.next().getContent());
+        Assert.assertEquals("i hate sand", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        iterator = mFace.getFeedByRecent(mFace.getUser(45));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("greetings", iterator.next().getContent());
+        Assert.assertEquals("you are my only hope", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        iterator = mFace.getFeedByRecent(mFace.getUser(23));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("you are my only hope", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        iterator = mFace.getFeedByRecent(mFace.getUser(57));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("you are my only hope", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        iterator = mFace.getFeedByPopular(mFace.getUser(30));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("greetings", iterator.next().getContent());
+        Assert.assertEquals("wooo hooooo", iterator.next().getContent());
+        Assert.assertEquals("pokey religions and ancient weapons are no match for a good blaster at your side", iterator.next().getContent());
+        Assert.assertEquals("this is where the fun begins", iterator.next().getContent());
+        Assert.assertEquals("i've brought peace, freedom, justice, and security to my new empire", iterator.next().getContent());
+        Assert.assertEquals("i hate sand", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        posts= new ArrayList<>((Collection) mFace.getUser(57).getStatusesRecent());
+        posts.get(1).unlike(luke);
+        posts.get(1).unlike(han);
+        posts.get(2).like(han);
+
+        iterator = mFace.getFeedByPopular(mFace.getUser(30));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("greetings", iterator.next().getContent());
+        Assert.assertEquals("wooo hooooo", iterator.next().getContent());
+        Assert.assertEquals("pokey religions and ancient weapons are no match for a good blaster at your side", iterator.next().getContent());
+        Assert.assertEquals("i hate sand", iterator.next().getContent());
+        Assert.assertEquals("i've brought peace, freedom, justice, and security to my new empire", iterator.next().getContent());
+        Assert.assertEquals("this is where the fun begins", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        posts.get(0).like(luke);
+        iterator = mFace.getFeedByPopular(mFace.getUser(30));
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("greetings", iterator.next().getContent());
+        Assert.assertEquals("wooo hooooo", iterator.next().getContent());
+        Assert.assertEquals("pokey religions and ancient weapons are no match for a good blaster at your side", iterator.next().getContent());
+        Assert.assertEquals("i've brought peace, freedom, justice, and security to my new empire", iterator.next().getContent());
+        Assert.assertEquals("i hate sand", iterator.next().getContent());
+        Assert.assertEquals("this is where the fun begins", iterator.next().getContent());
+        Assert.assertFalse(iterator.hasNext());
+
+        Assert.assertEquals(0, (int)mFace.rank(mFace.getUser(12), mFace.getUser(12)));
+        Assert.assertEquals(1, (int)mFace.rank(mFace.getUser(12), mFace.getUser(30)));
+        Assert.assertEquals(1, (int)mFace.rank(mFace.getUser(12), mFace.getUser(45)));
+        Assert.assertEquals(2, (int)mFace.rank(mFace.getUser(12), mFace.getUser(23)));
+        Assert.assertEquals(2, (int)mFace.rank(mFace.getUser(12), mFace.getUser(57)));
+        Assert.assertEquals(1, (int)mFace.rank(mFace.getUser(30), mFace.getUser(45)));
+        Assert.assertEquals(1, (int)mFace.rank(mFace.getUser(30), mFace.getUser(23)));
+        Assert.assertEquals(1, (int)mFace.rank(mFace.getUser(30), mFace.getUser(57)));
+        Assert.assertEquals(2, (int)mFace.rank(mFace.getUser(45), mFace.getUser(23)));
+        Assert.assertEquals(2, (int)mFace.rank(mFace.getUser(45), mFace.getUser(57)));
+        Assert.assertEquals(2, (int)mFace.rank(mFace.getUser(23), mFace.getUser(57)));
+
+        mFace.joinFaceOOP(123, "darth vader");
+        mFace.joinFaceOOP(456, "obi wan");
+        Assert.assertThrows(ConnectionDoesNotExistException.class, () -> mFace.rank(mFace.getUser(123), mFace.getUser(456)));
+        Assert.assertThrows(ConnectionDoesNotExistException.class, () -> mFace.rank(mFace.getUser(456), mFace.getUser(123)));;
+        Assert.assertThrows(PersonNotInSystemException.class, () -> mFace.rank(mFace.getUser(123), new PersonImpl(789, "yoda")));
 
     }
 }
