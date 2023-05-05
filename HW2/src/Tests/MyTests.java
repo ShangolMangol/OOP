@@ -238,46 +238,25 @@ public class MyTests
         Person han = new PersonImpl(45, "han");
         Person lando = new PersonImpl(23, "lando");
         Person anakin = new PersonImpl(57, "anakin");
-        try
-        {
-            mFace.joinFaceOOP(12, "luke");
-            mFace.joinFaceOOP(30, "leia");
-            mFace.joinFaceOOP(45, "han");
-            mFace.joinFaceOOP(23, "lando");
-            mFace.joinFaceOOP(57, "anakin");
-        } catch (PersonAlreadyInSystemException e)
-        {
-            Assert.fail();
-        }
-        try
-        {
-            mFace.joinFaceOOP(12, "rey");
-        } catch (PersonAlreadyInSystemException e)
-        {
-            Assert.assertTrue(true);
-        }
+        mFace.joinFaceOOP(12, "luke");
+        mFace.joinFaceOOP(30, "leia");
+        mFace.joinFaceOOP(45, "han");
+        mFace.joinFaceOOP(23, "lando");
+        mFace.joinFaceOOP(57, "anakin");
+
+        Assert.assertThrows(PersonAlreadyInSystemException.class, ()-> mFace.joinFaceOOP(12, "rey"));
+
 
         Assert.assertEquals(5, mFace.size());
 
-        try
-        {
-            Assert.assertEquals(luke, mFace.getUser(12));
-            Assert.assertEquals(leia, mFace.getUser(30));
-            Assert.assertEquals(han, mFace.getUser(45));
-            Assert.assertEquals(lando, mFace.getUser(23));
-            Assert.assertEquals(anakin, mFace.getUser(57));
-        } catch (PersonNotInSystemException e)
-        {
-            Assert.fail();
-        }
+        Assert.assertEquals(luke, mFace.getUser(12));
+        Assert.assertEquals(leia, mFace.getUser(30));
+        Assert.assertEquals(han, mFace.getUser(45));
+        Assert.assertEquals(lando, mFace.getUser(23));
+        Assert.assertEquals(anakin, mFace.getUser(57));
 
-        try
-        {
-            mFace.getUser(123);
-        } catch (PersonNotInSystemException e)
-        {
-            Assert.assertTrue(true);
-        }
+        Assert.assertThrows(PersonNotInSystemException.class, ()-> mFace.getUser(123));
+
 
 
         luke = mFace.getUser(12);
@@ -291,44 +270,16 @@ public class MyTests
         mFace.addFriendship(han, leia);
         mFace.addFriendship(leia, lando);
         mFace.addFriendship(leia, anakin);
-        try
-        {
-            mFace.addFriendship(luke, leia);
-        } catch (ConnectionAlreadyExistException e)
-        {
-            Assert.assertTrue(true);
-        }
-        try
-        {
-            Person rey = new PersonImpl(13, "rey");
-            mFace.addFriendship(luke, rey);
-        } catch (PersonNotInSystemException e)
-        {
-            Assert.assertTrue(true);
-        }
-        try
-        {
-            mFace.addFriendship(luke, luke);
-        } catch (SamePersonException e)
-        {
-            Assert.assertTrue(true);
-        }
 
-        try
-        {
-            mFace.addFriendship(luke, han);
-        } catch (ConnectionAlreadyExistException e)
-        {
-            Assert.assertTrue(true);
-        }
+        Person finalLuke = luke;
+        Person finalLeia = leia;
+        Assert.assertThrows(ConnectionAlreadyExistException.class, ()-> mFace.addFriendship(finalLuke, finalLeia));
+        Person rey = new PersonImpl(13, "rey");
+        Assert.assertThrows(PersonNotInSystemException.class, ()-> mFace.addFriendship(finalLuke, rey));
+        Assert.assertThrows(SamePersonException.class, ()-> mFace.addFriendship(finalLuke, finalLuke));
+        Person finalHan = han;
+        Assert.assertThrows(ConnectionAlreadyExistException.class, ()-> mFace.addFriendship(finalLuke, finalHan));
 
-        try
-        {
-            mFace.addFriendship(han, luke);
-        } catch (ConnectionAlreadyExistException e)
-        {
-            Assert.assertTrue(true);
-        }
 
         mFace.getUser(12).postStatus("greetings");
         mFace.getUser(30).postStatus("you are my only hope");
@@ -428,34 +379,9 @@ public class MyTests
 
         mFace.joinFaceOOP(123, "darth vader");
         mFace.joinFaceOOP(456, "obi wan");
-        try
-        {
-            mFace.rank(mFace.getUser(123), mFace.getUser(456));
-            Assert.fail();
-        }
-        catch (ConnectionDoesNotExistException e)
-        {
-            Assert.assertTrue(true);
-        }
+        Assert.assertThrows(ConnectionDoesNotExistException.class, () -> mFace.rank(mFace.getUser(123), mFace.getUser(456)));
+        Assert.assertThrows(ConnectionDoesNotExistException.class, () -> mFace.rank(mFace.getUser(456), mFace.getUser(123)));;
+        Assert.assertThrows(PersonNotInSystemException.class, () -> mFace.rank(mFace.getUser(123), new PersonImpl(789, "yoda")));
 
-        try
-        {
-            mFace.rank(mFace.getUser(456), mFace.getUser(123));
-            Assert.fail();
-        }
-        catch (ConnectionDoesNotExistException e)
-        {
-            Assert.assertTrue(true);
-        }
-
-        try
-        {
-            mFace.rank(mFace.getUser(123), new PersonImpl(789, "yoda"));
-            Assert.fail();
-        }
-        catch (PersonNotInSystemException e)
-        {
-            Assert.assertTrue(true);
-        }
     }
 }
