@@ -16,7 +16,7 @@ public class StatusImpl implements Status
 	 * A constructor that receives the status publisher, the text of the status
 	 *  and the id of the status.
 	 */
-	public StatusImpl(Integer id, String content, Person publisher)
+	public StatusImpl(Person publisher, String content, Integer id)
 	{
 		this.mId = id;
 		this.mContent = content;

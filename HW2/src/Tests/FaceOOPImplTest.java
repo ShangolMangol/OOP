@@ -1,4 +1,4 @@
-package OOP2.Tests;
+package Tests;
 
 import OOP2.Provided.*;
 import OOP2.Solution.FaceOOPImpl;

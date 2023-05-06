@@ -43,7 +43,7 @@ public class PersonImpl implements Person {
 	@Override
 	public Status postStatus(String content)
 	{
-		Status newStatus = new StatusImpl(mCurrentStatus, content, this);
+		Status newStatus = new StatusImpl(this, content, mCurrentStatus);
 		mCurrentStatus++;
 		mStatuses.add(newStatus);
 		return newStatus;
@@ -106,5 +106,11 @@ public class PersonImpl implements Person {
 			return false;
 		Person other = (Person) obj;
 		return Objects.equals(other.getId(), mId);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return mId.hashCode();
 	}
 }

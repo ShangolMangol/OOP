@@ -14,6 +14,7 @@ public class FaceOOPImpl implements FaceOOP
 		Iterable<Status> getStatuses(Person person);
 	}
 
+	private static final int NOT_REACHABLE = -1;
 	private final ArrayList<Person> mUsers;
 
 
@@ -108,8 +109,50 @@ public class FaceOOPImpl implements FaceOOP
 	@Override
 	public Integer rank(Person source, Person target) throws PersonNotInSystemException, ConnectionDoesNotExistException
 	{
-		return null;
+		if( !mUsers.contains(source) || !mUsers.contains(target))
+			throw new PersonNotInSystemException();
+
+		if(source.equals(target))
+			return 0;
+
+		Map<Person, Integer> ranks = new HashMap<>();
+		Set<Person> visited = new HashSet<>();
+		Queue<Person> personQueue = new LinkedList<>();
+
+		//set all nodes rank
+		for (Person p : mUsers)
+		{
+			if(p.equals(source))
+				ranks.put(p, 0);
+			else
+				ranks.put(p, NOT_REACHABLE);
+		}
+		//initializing BFS visited and queue
+		visited.add(source);
+		personQueue.add(source);
+
+		while (!personQueue.isEmpty())
+		{
+			Person currentNode = personQueue.poll();
+			Integer currentRank = ranks.get(currentNode);
+			for (Person neighbor : currentNode.getFriends())
+			{
+				if(visited.contains(neighbor))
+					continue;
+
+				visited.add(neighbor);
+				ranks.put(neighbor, currentRank + 1);
+				personQueue.add(neighbor);
+			}
+		}
+
+		Integer rank = ranks.get(target);
+		if(rank == NOT_REACHABLE)
+			throw new ConnectionDoesNotExistException();
+
+		return rank;
 	}
+
 
 	@Override
 	public Iterator<Person> iterator()
