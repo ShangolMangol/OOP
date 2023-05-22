@@ -1,0 +1,2 @@
+OOPEnum subclass: #Student values: #('REGEV' 'IDO') lazyInitialization: true initialize: 'initialize Transcript show: ''hello'';cr.' instanceVariableNames: ''
+classVariableNames: '' poolDictionaries: '' category: ''
