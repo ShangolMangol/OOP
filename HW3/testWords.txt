@@ -1,2 +1,13 @@
 OOPEnum subclass: #Student values: #('REGEV' 'IDO') lazyInitialization: true initialize: 'initialize Transcript show: ''hello'';cr.' instanceVariableNames: ''
-classVariableNames: '' poolDictionaries: '' category: ''
+classVariableNames: '' poolDictionaries: '' category: 'OOP3-Generated'.
+
+Transcript show: Student IDO.
+
+(Student_IDO__) compile: 'foo: x ^3'.
+
+Student compile: 'foo: x ^x'.
+
+
+Transcript show: ((Student IDO) foo: 5).
+
+Student IDO foo.
