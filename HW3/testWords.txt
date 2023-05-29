@@ -1,0 +1,51 @@
+OOPEnum subclass: #Student values: #('REGEV' 'IDO') lazyInitialization: true initialize: 'initialize Transcript show: ''hello'';cr.' instanceVariableNames: ''
+classVariableNames: '' poolDictionaries: '' category: 'OOP3-Generated'.
+
+Transcript show: Student IDO.
+
+(Student_IDO__) compile: 'foo: x ^3'.
+
+Student compile: 'foo: x ^x'.
+('Student' asSymbol ) compile: 'foo: x ^2'.
+
+Student addSwitch
+
+doGrean or doRed or doDefault
+
+(Student REGEV) do_IDO: [Transcript show: 'aa'.].
+
+Transcript show: ((Student IDO) foo: 5).
+
+Student IDO foo.
+
+Transcript show: (OOPEnum powerSet: #('a' 'b' 'c')) ; cr.
+
+| IDOBlock |
+IDOBlock := [Transcript show: 'aa'.]. 
+
+((Student REGEV) do_IDO: [Transcript show: 'bb'.]) | 
+((Student REGEV) do_REGEV: [Transcript show: 'bb'.]) | 
+((Student REGEV) do_IDO: [Transcript show: 'bb'.]) | false
+
+
+(
+((Student REGEV) do_IDO: IDOBlock) | 
+((Student REGEV) do_REGEV: IDOBlock) | 
+((Student REGEV) do_IDO: IDOBlock) |
+false ) or: [
+	(Student REGEV) do_REGEV: [Transcript show: 'bb'.]. 
+].
+
+
+OOPEnum subclass: #OurColor values: #('RED' 'YELLOW' 'GREEN') lazyInitialization: false initialize: 'initialize Transcript show: ''hello'';cr.' instanceVariableNames: ''
+classVariableNames: '' poolDictionaries: '' category: 'OOP3-Generated'.
+
+OurColor addSwitch 
+
+ourEnum := OurColor RED.
+
+ourEnum switch_case_RED: [Transcript show: 'RED'; cr.] case_YELLOW: [Transcript show:
+'YELLOW'; cr.] case_GREEN: [Transcript show: 'GREEN'; cr].
+
+ourEnum switch_case_YELLOW: [Transcript show: 'YELLOW'; cr.] case_GREEN: [Transcript
+show: 'GREEN'; cr] default: [Transcript show: 'Default color: RED'; cr].
