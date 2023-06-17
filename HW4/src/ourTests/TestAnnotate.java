@@ -1,4 +1,4 @@
-package tests;
+package ourTests;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,6 +7,7 @@ import solution.Then;
 import solution.When;
 
 import java.lang.reflect.Method;
+import solution.StoryTesterImpl;
 
 public class TestAnnotate
 {
@@ -46,5 +47,16 @@ public class TestAnnotate
         Assert.assertNull(given.getAnnotation(Then.class));
     }
 
+    @Test
+    public void methodParams() throws NoSuchMethodException
+    {
+
+
+        Class<?>[] paramsArr = StoryTesterImpl.TestLine.class.getDeclaredMethod("getContent").getParameterTypes();
+        Assert.assertEquals(0, paramsArr.length);
+
+
+
+    }
     
 }
