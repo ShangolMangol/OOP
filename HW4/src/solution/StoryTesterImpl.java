@@ -3,13 +3,12 @@ package solution;
 import org.junit.ComparisonFailure;
 import provided.*;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
 public class StoryTesterImpl implements StoryTester
 {
     private static final String SPACE = " ";
-    private static final String NEWLINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     enum TestType
     {
@@ -34,6 +33,11 @@ public class StoryTesterImpl implements StoryTester
             mType = parseType();
             mContent = parseContent();
             mValue = parseValue();
+        }
+
+        private String getRawLine()
+        {
+            return mRawLine;
         }
 
         private TestType parseType()
@@ -101,20 +105,25 @@ public class StoryTesterImpl implements StoryTester
 
         public boolean isCorrectMethod(Method method)
         {
-            String annoText;
+            String annoText = null;
+
             if(getType() == TestType.Given)
             {
-                annoText = method.getAnnotation(Given.class).value();
+                Given given = method.getAnnotation(Given.class);
+                annoText = given != null ? given.value() : null;
             }
             else if(getType() == TestType.When)
             {
-                annoText = method.getAnnotation(When.class).value();
+                When given = method.getAnnotation(When.class);
+                annoText = given != null ? given.value() : null;
             }
             else if(getType() == TestType.Then)
             {
-                annoText = method.getAnnotation(Then.class).value();
+                Then then = method.getAnnotation(Then.class);
+                annoText = then != null ? then.value() : null;
             }
-            else
+
+            if(annoText == null)
             {
                 return false;
             }
@@ -126,11 +135,9 @@ public class StoryTesterImpl implements StoryTester
         }
     }
 
-
-
-
-    public static Method getTestMethod(Class<?> testClass, TestLine testLine) throws WordNotFoundException
+    public static Method getTestMethod(Class<?> testClass, TestLine testLine)
     {
+
         for(Method method : testClass.getDeclaredMethods())
         {
             if(testLine.isCorrectMethod(method))
@@ -139,13 +146,18 @@ public class StoryTesterImpl implements StoryTester
             }
         }
 
-        testLine.throwNotFoundType();
-        throw new RuntimeException("enum value not found, should never happen");
+        if(testClass != Object.class)
+        {
+            return getTestMethod(testClass.getSuperclass(), testLine);
+        }
+
+        return null;
     }
 
     public static void invokeTestMethod(Object testInstance, TestLine testLine, Method testMethod)
             throws InvocationTargetException, IllegalAccessException
     {
+        testMethod.setAccessible(true);
         String methodArg = testLine.getValue();
         //check if Integer
         if(testMethod.getParameterTypes()[0] == Integer.class)
@@ -154,6 +166,24 @@ public class StoryTesterImpl implements StoryTester
             testMethod.invoke(testInstance, methodArg);
     }
 
+    public static Object sudoNew(Class<?> objClass)
+            throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    {
+        Class<?> enclosing = objClass.getEnclosingClass();
+        if(enclosing != null)
+        {
+            Object enclosingValue = sudoNew(enclosing);
+            Constructor<?> ctor = objClass.getDeclaredConstructor(enclosing);
+            ctor.setAccessible(true);
+            return ctor.newInstance(enclosingValue);
+        }
+        else
+        {
+            Constructor<?> defaultConstructor = objClass.getDeclaredConstructor();
+            defaultConstructor.setAccessible(true);
+            return defaultConstructor.newInstance();
+        }
+    }
 
     public static Constructor<?> safeGetCopyConstructor(Class<?> type)
     {
@@ -172,10 +202,12 @@ public class StoryTesterImpl implements StoryTester
     {
         Class<?> objClass = obj.getClass();
 
-        Object backupObj = objClass.newInstance();
+        Object backupObj = sudoNew(objClass);
 
         for (Field field : objClass.getDeclaredFields())
         {
+            field.setAccessible(true);
+
             Object fieldValue = field.get(obj);
             Object newValue;
             Class<?> fieldClass = fieldValue.getClass();
@@ -184,10 +216,12 @@ public class StoryTesterImpl implements StoryTester
             if(fieldValue instanceof Cloneable)
             {
                 Method clone = fieldClass.getMethod("clone");
+                clone.setAccessible(true);
                 newValue = clone.invoke(fieldValue);
             }
             else if(copyConstructor != null)
             {
+                copyConstructor.setAccessible(true);
                 newValue = copyConstructor.newInstance(fieldValue);
             }
             else
@@ -206,15 +240,17 @@ public class StoryTesterImpl implements StoryTester
     public void testOnInheritanceTree(String story, Class<?> testClass) throws Exception
     {
         //create instance of testClass by finding the default constructor
-        Object testInstance = testClass.newInstance();
-        String[] sentences = story.split(NEWLINE);
-
-        Object backupInstance;
+        Object testInstance = sudoNew(testClass);
+        String[] sentences = story.split(NEW_LINE);
+        StoryTestExceptionImpl testException = null;
+        Object backupInstance = null;
         boolean firstWhen = true;
         for (String sentence: sentences)
         {
             TestLine testLine = new TestLine(sentence);
             Method testMethod = getTestMethod(testClass, testLine);
+            if(testMethod == null)
+                testLine.throwNotFoundType();
 
             if(testLine.isWhenType() && firstWhen)
             {
@@ -225,44 +261,62 @@ public class StoryTesterImpl implements StoryTester
             {
                 firstWhen = true;
             }
-
             try
             {
                 invokeTestMethod(testInstance, testLine, testMethod);
             }
-            catch (ComparisonFailure comparisonFailure)
+            catch (InvocationTargetException invocationTargetException)
             {
-
+                Throwable target = invocationTargetException.getTargetException();
+                if(!(target instanceof ComparisonFailure))
+                    throw invocationTargetException;
+                
+                ComparisonFailure comparisonFailure = (ComparisonFailure) target;
+                testInstance = backupInstance;
+                if(testException == null)
+                {
+                    testException = new StoryTestExceptionImpl(testLine.getRawLine(), comparisonFailure.getExpected(), comparisonFailure.getActual());
+                }
+                testException.incrementFailCount();
             }
         }
-        /*
-        for each line in story
-            get line type
-            get line data
-            get line arg value
+        if(testException != null)
+            throw testException;
+    }
 
 
-            try
-                find methode in all inheritance that has the annotate type and the data description
-            throw error
+    private Class<?> findClassWithGiven(TestLine testLine, Class<?> testClass)
+    {
+        if(getTestMethod(testClass, testLine) != null)
+        {
+            return testClass;
+        }
+        for(Class<?> declaredClass : testClass.getDeclaredClasses())
+        {
+            if(declaredClass.isInterface())
+                continue;
 
-            if first "when" backup
-            if the method is "Then", catch the assert failure
-                restore on failure
+            if(getTestMethod(declaredClass, testLine) != null)
+            {
+                return declaredClass;
+            }
+            else if(testClass != Object.class)
+            {
+                Class<?> result = findClassWithGiven(testLine, declaredClass);
+                if(result != null)
+                    return result;
+            }
+        }
 
-
-         check if there is any errors and throw the correct exception
-         */
-
-
-
-
-
+        return null;
     }
 
     @Override
     public void testOnNestedClasses(String story, Class<?> testClass) throws Exception
     {
-
+        String firstLine = story.split(NEW_LINE)[0];
+        TestLine testLine = new TestLine(firstLine);
+        Class<?> newTestClass = findClassWithGiven(testLine, testClass);
+        testOnInheritanceTree(story, newTestClass);
     }
 }
