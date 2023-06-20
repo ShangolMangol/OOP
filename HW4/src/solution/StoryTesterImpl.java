@@ -160,7 +160,7 @@ public class StoryTesterImpl implements StoryTester
         testMethod.setAccessible(true);
         String methodArg = testLine.getValue();
         //check if Integer
-        if(testMethod.getParameterTypes()[0] == Integer.class)
+        if(testMethod.getParameterTypes()[0] == Integer.class || testMethod.getParameterTypes()[0] == int.class)
             testMethod.invoke(testInstance, Integer.parseInt(testLine.getValue()));
         else
             testMethod.invoke(testInstance, methodArg);
@@ -170,9 +170,10 @@ public class StoryTesterImpl implements StoryTester
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
     {
         Class<?> enclosing = objClass.getEnclosingClass();
-        if(enclosing != null)
+        if(enclosing != null && !Modifier.isStatic(objClass.getModifiers()))
         {
             Object enclosingValue = sudoNew(enclosing);
+
             Constructor<?> ctor = objClass.getDeclaredConstructor(enclosing);
             ctor.setAccessible(true);
             return ctor.newInstance(enclosingValue);

@@ -88,6 +88,14 @@ public class TestBackup
         int a;
     }
 
+    static class A
+    {
+        class B
+        {
+
+        }
+    }
+
     @Test
     public void runBackup() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException
     {
