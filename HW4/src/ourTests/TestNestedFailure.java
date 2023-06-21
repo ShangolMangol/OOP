@@ -56,12 +56,13 @@ public class TestNestedFailure
                 + "When the number increase by -5\n"
                 + "Then the number is 110\n" // TRUE
                 + "Then the number is 666\n" //FAILE
-                + "Then the number is 140\n" //GO BACK, TRUE
-                + "Then the number is 666\n" //FAILE
-                + "Then the number is 140\n" //STAY BACK TRUE
+                + "Then the number is 110\n" //GO BACK, TRUE
+                + "Then the number is 140\n" //FAILE
+                + "Then the number is 110\n" //STAY BACK TRUE
                 + "When the number increase by 10\n"
-                + "Then the number is 150\n" //TRUE
-                + "Then the number is 150\n"; //TRUE
+                + "When the number increase by 10\n"
+                + "Then the number is 160\n" //TRUE
+                + "Then the number is 160\n"; //TRUE
 
         try
         {

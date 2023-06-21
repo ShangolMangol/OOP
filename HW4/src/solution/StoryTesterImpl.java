@@ -246,6 +246,7 @@ public class StoryTesterImpl implements StoryTester
         StoryTestExceptionImpl testException = null;
         Object backupInstance = null;
         boolean firstWhen = true;
+        boolean shouldRecover = false;
         for (String sentence: sentences)
         {
             TestLine testLine = new TestLine(sentence);
@@ -255,8 +256,11 @@ public class StoryTesterImpl implements StoryTester
 
             if(testLine.isWhenType() && firstWhen)
             {
+                if(shouldRecover)
+                    testInstance = backupInstance;
                 backupInstance = createBackup(testInstance);
                 firstWhen = false;
+                shouldRecover = false;
             }
             else if(!testLine.isWhenType())
             {
@@ -273,7 +277,7 @@ public class StoryTesterImpl implements StoryTester
                     throw invocationTargetException;
                 
                 ComparisonFailure comparisonFailure = (ComparisonFailure) target;
-                testInstance = backupInstance;
+                shouldRecover = true;
                 if(testException == null)
                 {
                     testException = new StoryTestExceptionImpl(testLine.getRawLine(), comparisonFailure.getExpected(), comparisonFailure.getActual());
