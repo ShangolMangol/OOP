@@ -8,7 +8,7 @@ public class DogStoryDerivedTest extends DogStoryTest {
 	private void theHouseCleaned(Integer hours) {
 		dog.hoursCleaningFloors(hours);
 	}
-	
+
 	public class InnerClass extends DogStoryTest {
 		@Given("a Dog that his age is &age")
 		public void aDog(Integer age) {

@@ -194,7 +194,14 @@ public class StoryTesterImpl implements StoryTester
         }
         catch (NoSuchMethodException e)
         {
-            return null;
+            try
+            {
+                return type.getDeclaredConstructor(type);
+            }
+            catch (NoSuchMethodException e1)
+            {
+                return null;
+            }
         }
     }
 
@@ -210,13 +217,24 @@ public class StoryTesterImpl implements StoryTester
             field.setAccessible(true);
 
             Object fieldValue = field.get(obj);
+            if(fieldValue == null)
+            {
+                field.set(backupObj, null);
+                continue;
+            }
             Object newValue;
             Class<?> fieldClass = fieldValue.getClass();
             Constructor<?> copyConstructor = safeGetCopyConstructor(fieldClass);
 
             if(fieldValue instanceof Cloneable)
             {
-                Method clone = fieldClass.getMethod("clone");
+                Method clone;
+                try{
+                    clone = fieldClass.getMethod("clone");
+                } catch (NoSuchMethodException e)
+                {
+                    clone = fieldClass.getDeclaredMethod("clone");
+                }
                 clone.setAccessible(true);
                 newValue = clone.invoke(fieldValue);
             }
@@ -240,6 +258,10 @@ public class StoryTesterImpl implements StoryTester
     @Override
     public void testOnInheritanceTree(String story, Class<?> testClass) throws Exception
     {
+        if (story == null || testClass == null)
+        {
+            throw new IllegalArgumentException();
+        }
         //create instance of testClass by finding the default constructor
         Object testInstance = sudoNew(testClass);
         String[] sentences = story.split(NEW_LINE);
@@ -319,6 +341,10 @@ public class StoryTesterImpl implements StoryTester
     @Override
     public void testOnNestedClasses(String story, Class<?> testClass) throws Exception
     {
+        if (story == null || testClass == null)
+        {
+            throw new IllegalArgumentException();
+        }
         String firstLine = story.split(NEW_LINE)[0];
         TestLine testLine = new TestLine(firstLine);
         Class<?> newTestClass = findClassWithGiven(testLine, testClass);
