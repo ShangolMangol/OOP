@@ -3,6 +3,9 @@
 
 #include "List.h"
 #include "Conditional.h"
+#include "BoardCell.h"
+#include "MoveVehicle.h"
+
 
 template<int T>
 struct Int
@@ -66,10 +69,134 @@ int main()
     assert(typeid(test1) == typeid(Int<0>));
     assert(typeid(test2) == typeid(Int<1>));
 
-    int val = ConditionalInteger<(0 != 1), 0, 1>::value; // = 0
-    assert(val == 0);
-    val = ConditionalInteger<(0 == 1), 0, 1>::value; // = 1
-    assert(val == 1);
-    std::cout << "Hello, World!" << std::endl;
+    static_assert(ConditionalInteger<(0 != 1), 0, 1>::value == 0, "value of conditional is not false");
+    static_assert(ConditionalInteger<(0 == 1), 0, 1>::value == 1, "value of ConditinalInteger isn't 1 ");
+
+    static_assert(Move<X, RIGHT, 1>::amount == 1, "as");
+
+    static_assert(FindFirstIndex<
+            List<BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<E, UP, 3>>,
+            0 >::index == 0, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<E, UP, 3>>,
+            1 >::index == 0, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<E, UP, 3>>,
+            2 >::index == 0, "wrong index");
+
+
+    static_assert(FindLastIndex<
+            List<BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<E, UP, 3>>,
+            0 >::index == 2, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<E, UP,3>>,
+            1 >::index == 2, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<E, UP, 3>>,
+            2 >::index == 2, "wrong index");
+
+
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, UP, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            1 >::index == 1, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, UP, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            2 >::index == 1, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, UP, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            3 >::index == 1, "wrong index");
+
+
+    static_assert(FindLastIndex<
+            List<BoardCell<E, UP, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            1 >::index == 3, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<E, UP, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            2 >::index == 3, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<E, UP, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            3 >::index == 3, "wrong index");
+
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            0>::index == 0, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            1>::index == 1, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            2>::index == 1, "wrong index");
+    static_assert(FindFirstIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            3>::index == 1, "wrong index");
+
+
+    static_assert(FindLastIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            0 >::index == 0, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            1 >::index == 3, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            2 >::index == 3, "wrong index");
+    static_assert(FindLastIndex<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>,
+            3 >::index == 3, "wrong index");
+
+
+    assert(typeid(MoveStepList<List<BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>,BoardCell<E, UP, 3>>
+            , 1, LEFT >::list) ==
+        typeid(List<BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>,BoardCell<EMPTY, UP, 0>,BoardCell<E, UP, 3>>));
+
+    assert(typeid(MoveStepList<List<BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>,BoardCell<E, UP, 3>>
+            , 2, LEFT >::list) ==
+           typeid(List<BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>,BoardCell<EMPTY, UP, 0>,BoardCell<E, UP, 3>>));
+
+    assert(typeid(MoveStepList<List<BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>, BoardCell<EMPTY, UP, 0>>
+            , 1, RIGHT >::list) ==
+           typeid(List<BoardCell<EMPTY, UP, 0>,BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>>));
+
+    assert(typeid(MoveStepList<List<BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>, BoardCell<EMPTY, UP, 0>>
+            , 2, RIGHT >::list) ==
+           typeid(List<BoardCell<EMPTY, UP, 0>,BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 2>,BoardCell<X, LEFT, 2>>));
+
+
+
+
+
+
+    assert(typeid(MoveStepList<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<EMPTY, LEFT, 3>>,
+            1, RIGHT>::list)
+            ==
+            typeid(List<BoardCell<E, DOWN, 3>, BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>));
+
+    assert(typeid(MoveStepList<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, RIGHT, 3>,BoardCell<X, RIGHT, 3>,BoardCell<EMPTY, RIGHT, 3>>,
+            2, RIGHT>::list)
+           ==
+           typeid(List<BoardCell<E, DOWN, 3>, BoardCell<EMPTY, UP, 0>,BoardCell<X, RIGHT, 3>,BoardCell<X, RIGHT, 3>>));
+
+    assert(typeid(MoveStepList<
+            List<BoardCell<E, DOWN, 3>, BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>,BoardCell<EMPTY, LEFT, 3>>,
+            1, RIGHT>::list)
+           ==
+           typeid(List<BoardCell<E, DOWN, 3>, BoardCell<EMPTY, UP, 0>,BoardCell<X, LEFT, 3>,BoardCell<X, LEFT, 3>>));
+
+    assert(typeid(MoveStepList<
+            List<BoardCell<E, DOWN, 3>, BoardCell<EMPTY, UP, 0>,BoardCell<X, RIGHT, 3>,BoardCell<X, RIGHT, 3>>,
+            2, LEFT>::list)
+           ==
+           typeid(List<BoardCell<E, DOWN, 3>, BoardCell<X, RIGHT, 3>,BoardCell<X, RIGHT, 3>,BoardCell<EMPTY, UP, 0>>));
+
+
+
+
+
+
+
+
+    std::cout << std::endl << "Passed!" << std::endl << std::endl;
     return 0;
 }

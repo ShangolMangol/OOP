@@ -2,7 +2,7 @@
 #define PART2_GAMEBOARD_H
 
 template<typename ListType, int Width, int Height>
-struct Board
+struct GameBoard
 {
     typedef ListType board;
     static constexpr int width = Width;
