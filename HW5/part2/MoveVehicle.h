@@ -88,9 +88,6 @@ struct MoveStepList;
 template<typename... Cell, int Index>
 struct MoveStepList<List<Cell...>, Index, LEFT>
 {
-    static_assert(GetAtIndex<Index, List<Cell...>>::value::direction == LEFT
-                    ||
-                    GetAtIndex<Index, List<Cell...>>::value::direction == RIGHT, "Wrong direction");
     static constexpr int startIndex = FindFirstIndex<List<Cell...>, Index>::index;
     static constexpr int lastIndex = FindLastIndex<List<Cell...>, Index>::index;
     static_assert(startIndex > 0, "move out of board");
@@ -109,9 +106,6 @@ struct MoveStepList<List<Cell...>, Index, LEFT>
 template<typename... Cell, int Index>
 struct MoveStepList<List<Cell...>, Index, RIGHT>
 {
-    static_assert(GetAtIndex<Index, List<Cell...>>::value::direction == LEFT
-                  ||
-                  GetAtIndex<Index, List<Cell...>>::value::direction == RIGHT, "Wrong direction");
     static constexpr int startIndex = FindFirstIndex<List<Cell...>, Index>::index;
     static constexpr int lastIndex = FindLastIndex<List<Cell...>, Index>::index;
     static_assert(lastIndex < List<Cell...>::size -1 , "move out of board");
@@ -128,53 +122,150 @@ struct MoveStepList<List<Cell...>, Index, RIGHT>
 };
 //endregion
 
-/*
-template<typename ...Cell, typename... ListType, int Width, int Height, int RowIndex, int ColumnIndex, int Amount>
-struct MoveStep<List<List<Cell...>, ListType...>, Width, Height, >
-{
+template<typename Board, int RowIndex, int ColumnIndex, Direction Dir>
+struct MoveStep;
 
+template<typename ...Lists, int RowIndex, int ColumnIndex, Direction Dir>
+struct MoveStep<List<Lists...>, RowIndex, ColumnIndex, Dir>
+{
+    typedef typename SetAtIndex<
+                RowIndex,
+                typename MoveStepList<
+                    typename GetAtIndex<RowIndex,List<Lists...>>::value
+                    ,ColumnIndex,
+                    Dir>::list,
+                List<Lists...>>::list list;
 };
-*/
+
+//region MoveVehicleNoCheck
+
+template<typename Board, int RowIndex, int ColumnIndex, Direction Dir, int Amount>
+struct MoveVehicleNoCheck;
+
+
+template<typename ListType, int RowIndex, int ColumnIndex, Direction Dir, int Amount>
+struct MoveVehicleNoCheck<GameBoard<ListType>, RowIndex, ColumnIndex, Dir, Amount>
+{
+    static_assert(GameBoard<ListType>::width > ColumnIndex, "column index too large");
+    static_assert(ColumnIndex >= 0, "column index too small");
+    static_assert(GameBoard<ListType>::height > RowIndex, "row index too large");
+    static_assert(RowIndex >= 0, "row index is less than 0");
+    static_assert(Amount > 0, "Amount less than 0");
+
+
+    typedef typename MoveVehicleNoCheck<
+                    GameBoard<
+                        typename MoveStep<ListType, RowIndex, ColumnIndex, Dir>::list>,
+                    RowIndex,
+                    ConditionalInteger<Dir == RIGHT,ColumnIndex+1, ColumnIndex-1>::value,
+                    Dir,
+                    Amount - 1>::board board;
+};
+
+template<typename ListType, int RowIndex, int ColumnIndex>
+struct MoveVehicleNoCheck<GameBoard<ListType>, RowIndex, ColumnIndex, LEFT, 1>
+{
+    static_assert(GameBoard<ListType>::width > ColumnIndex, "column index too large");
+    static_assert(ColumnIndex >= 0, "column index too small");
+    static_assert(GameBoard<ListType>::height > RowIndex, "row index too large");
+    static_assert(RowIndex >= 0, "row index is less than 0");
+
+    typedef GameBoard<typename MoveStep<ListType, RowIndex, ColumnIndex, LEFT>::list> board;
+};
+
+template<typename ListType, int RowIndex, int ColumnIndex>
+struct MoveVehicleNoCheck<GameBoard<ListType>, RowIndex, ColumnIndex, RIGHT, 1>
+{
+    static_assert(GameBoard<ListType>::width > ColumnIndex, "column index too large");
+    static_assert(ColumnIndex >= 0, "column index too small");
+    static_assert(GameBoard<ListType>::height > RowIndex, "row index too large");
+    static_assert(RowIndex >= 0, "row index is less than 0");
+
+    typedef GameBoard<typename MoveStep<ListType, RowIndex, ColumnIndex, RIGHT>::list> board;
+};
+//endregion MoveVehicleNoCheck
 
 //region MoveVehicle
 template<typename Board, int RowIndex, int ColumnIndex, Direction Dir, int Amount>
 struct MoveVehicle;
 
-template<typename ListType, int Width, int Height, int RowIndex, int ColumnIndex, int Amount>
-struct MoveVehicle<GameBoard<ListType, Width, Height>, RowIndex, ColumnIndex, UP, Amount>
+template<typename ListType, int RowIndex, int ColumnIndex, Direction Dir, int Amount>
+struct MoveVehicle<GameBoard<ListType>, RowIndex, ColumnIndex, Dir, Amount>
 {
-    typedef GameBoard<
-                typename Transpose<
-                         typename MoveVehicle<
-                                GameBoard<
-                                    typename Transpose<ListType>::matrix,
-                                    Height,
-                                    Width>
-                                ,ColumnIndex,
-                                RowIndex,
-                                LEFT,
-                                Amount>::board::board>::matrix,
-                Width,
-                Height> board;
+    static_assert(GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::type != EMPTY, "Can't move empty cell");
+    static constexpr Direction directionOfCar = GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::direction;
+    static_assert(directionOfCar == LEFT
+                  ||
+                  directionOfCar == RIGHT, "Wrong direction");
+
+    typedef typename MoveVehicleNoCheck<GameBoard<ListType>, RowIndex, ColumnIndex, Dir,Amount>::board board;
+};
+
+template<typename ListType, int RowIndex, int ColumnIndex>
+struct MoveVehicle<GameBoard<ListType>, RowIndex, ColumnIndex, LEFT, 1>
+{
+    static_assert(GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::type != EMPTY, "Can't move empty cell");
+    static constexpr Direction directionOfCar = GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::direction;
+    static_assert(directionOfCar == LEFT
+                  ||
+                  directionOfCar == RIGHT, "Wrong direction");
+
+    typedef typename MoveVehicleNoCheck<GameBoard<ListType>, RowIndex, ColumnIndex, LEFT,1>::board board;
+};
+
+template<typename ListType, int RowIndex, int ColumnIndex>
+struct MoveVehicle<GameBoard<ListType>, RowIndex, ColumnIndex, RIGHT, 1>
+{
+    static_assert(GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::type != EMPTY, "Can't move empty cell");
+    static constexpr Direction directionOfCar = GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::direction;
+    static_assert(directionOfCar == LEFT
+                  ||
+                  directionOfCar == RIGHT, "Wrong direction");
+
+    typedef typename MoveVehicleNoCheck<GameBoard<ListType>, RowIndex, ColumnIndex, RIGHT, 1>::board board;
 };
 
 
-template<typename ListType, int Width, int Height, int RowIndex, int ColumnIndex, int Amount>
-struct MoveVehicle<GameBoard<ListType, Width, Height>, RowIndex, ColumnIndex, DOWN, Amount>
+
+
+template<typename ListType, int RowIndex, int ColumnIndex, int Amount>
+struct MoveVehicle<GameBoard<ListType>, RowIndex, ColumnIndex, UP, Amount>
 {
+    static_assert(GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::type != EMPTY, "Can't move empty cell");
+    static constexpr Direction directionOfCar = GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::direction;
+    static_assert(directionOfCar == UP
+                  ||
+                  directionOfCar == DOWN, "Wrong direction");
+
+    typedef GameBoard<
+                typename Transpose<
+                         typename MoveVehicleNoCheck<
+                                GameBoard<typename Transpose<ListType>::matrix>,
+                                ColumnIndex,
+                                RowIndex,
+                                LEFT,
+                                Amount>::board::board>::matrix> board;
+};
+
+
+template<typename ListType, int RowIndex, int ColumnIndex, int Amount>
+struct MoveVehicle<GameBoard<ListType>, RowIndex, ColumnIndex, DOWN, Amount>
+{
+    static_assert(GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::type != EMPTY, "Can't move empty cell");
+
+    static constexpr Direction directionOfCar = GetAtIndex< ColumnIndex, typename GetAtIndex<RowIndex, ListType>::value>::value::direction;
+    static_assert(directionOfCar == UP
+                  ||
+                  directionOfCar == DOWN, "Wrong direction");
     typedef GameBoard<
             typename Transpose<
-                    typename MoveVehicle<
+                    typename MoveVehicleNoCheck<
                             GameBoard<
-                                    typename Transpose<ListType>::matrix,
-                                    Height,
-                                    Width>
+                                    typename Transpose<ListType>::matrix>
                             ,ColumnIndex,
                             RowIndex,
                             RIGHT,
-                            Amount>::board::board>::matrix,
-            Width,
-            Height> board;
+                            Amount>::board::board>::matrix> board;
 };
 
 

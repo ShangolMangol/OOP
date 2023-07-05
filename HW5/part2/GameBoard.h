@@ -1,11 +1,17 @@
 #ifndef PART2_GAMEBOARD_H
 #define PART2_GAMEBOARD_H
 
-template<typename ListType, int Width, int Height>
-struct GameBoard
+#include "List.h"
+
+template<typename ListType>
+struct GameBoard;
+
+
+template<typename... ListType>
+struct GameBoard<List<ListType...>>
 {
-    typedef ListType board;
-    static constexpr int width = Width;
-    static constexpr int height = Height;
+    typedef List<ListType...> board;
+    static constexpr int width = List<ListType...>::head::size;
+    static constexpr int height = List<ListType...>::size;
 };
 #endif //PART2_GAMEBOARD_H

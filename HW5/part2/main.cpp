@@ -192,9 +192,98 @@ int main()
 
 
 
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoard;
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2 >,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell< EMPTY,UP,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoardBUp;
+
+    assert(typeid(typename MoveVehicle<gameBoard, 4, 2, UP, 1>::board) == typeid(gameBoardBUp));
+
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<  B  ,UP   ,2>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<  B  ,UP   ,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2> >
+    >> smallGameBoard;
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<  B  ,UP   ,2>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2> >
+    >> smallGameBoardBUp;
+
+    assert(typeid(typename MoveVehicle<smallGameBoard, 2, 1, UP, 1>::board) == typeid(smallGameBoardBUp));
+
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoardXLeft;
+
+    assert(typeid(typename MoveVehicle<gameBoard, 2, 2, LEFT, 2>::board) == typeid(gameBoardXLeft));
 
 
 
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoardMoveUp;
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP,0>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoardMoveUpAfter;
+
+    assert(typeid(MoveVehicle<gameBoardMoveUp, 5,1, UP, 4>::board) == typeid(gameBoardMoveUpAfter));
+
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,DOWN ,2>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoardCarCrash;
+
+    typedef GameBoard< List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY  ,UP ,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<  D  ,DOWN ,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,DOWN ,2>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
+    >> gameBoardCarCrashNOT;
+
+    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 1>::board) == typeid(gameBoardCarCrashNOT));
+//    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,0, LEFT, 1>::board) == typeid(gameBoardCarCrashNOT));
+//    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 2>::board) == typeid(gameBoardCarCrashNOT));
+//    assert(typeid(MoveVehicle<gameBoardCarCrash, 3,1, UP, 2>::board) == typeid(gameBoardCarCrashNOT));
 
 
     std::cout << std::endl << "Passed!" << std::endl << std::endl;
