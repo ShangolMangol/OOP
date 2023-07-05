@@ -5,3 +5,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(part2 main.cpp List.h)
 add_executable(part2_test testCheckWinSolved1.cpp)
+add_executable(part2_test2 Part2Examples.cpp)
+

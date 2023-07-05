@@ -11,6 +11,8 @@ template<CellType Type, Direction Dir, int Amount>
 struct Move
 {
     static_assert(Type != EMPTY, "bad");
+    static constexpr CellType type = Type;
+    static constexpr Direction direction = Dir;
     static constexpr int amount = Amount;
 };
 

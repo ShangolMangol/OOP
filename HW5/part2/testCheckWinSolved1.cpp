@@ -2,6 +2,8 @@
 #include "GameBoard.h"
 #include "RushHour.h"
 
+#include <iostream>
+
 void testSolved1(){
     typedef GameBoard< List<
             List < BoardCell< X , RIGHT , 2>, BoardCell< X , LEFT , 2>, BoardCell< EMPTY , RIGHT , 0> >,
@@ -14,6 +16,7 @@ void testSolved1(){
 
 int main(){
     testSolved1();
+    std::cout << "Passed!" << std::endl;
     return 0;
 }
 

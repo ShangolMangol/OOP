@@ -282,9 +282,9 @@ int main()
     >> gameBoardCarCrashNOT;
 
     assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 1>::board) == typeid(gameBoardCarCrashNOT));
-    //    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,0, LEFT, 1>::board) == typeid(gameBoardCarCrashNOT));
-    //    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 2>::board) == typeid(gameBoardCarCrashNOT));
-    //    assert(typeid(MoveVehicle<gameBoardCarCrash, 3,1, UP, 2>::board) == typeid(gameBoardCarCrashNOT));
+//        assert(typeid(MoveVehicle<gameBoardCarCrash, 0,0, LEFT, 1>::board) == typeid(gameBoardCarCrashNOT));
+//        assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 2>::board) == typeid(gameBoardCarCrashNOT));
+//        assert(typeid(MoveVehicle<gameBoardCarCrash, 3,1, UP, 2>::board) == typeid(gameBoardCarCrashNOT));
 
 
     typedef List<
@@ -346,6 +346,18 @@ int main()
     static_assert(FindRedCar<board_x_5_0>::column == 0, "x 5 0 ");
 
 
+    static_assert(FindCar<board_x_0_0, X>::row == 0, "x 0 0 ");
+    static_assert(FindCar<board_x_0_0, X>::column == 0, "x 0 0 ");
+    static_assert(FindCar<board_x_0_4, X>::row == 0, "x 0 4 ");
+    static_assert(FindCar<board_x_0_4, X>::column == 4, "x 0 4 ");
+    static_assert(FindCar<board_x_3_0, X>::row == 3, "x 3 0 ");
+    static_assert(FindCar<board_x_3_0, X>::column == 0, "x 3 0 ");
+    static_assert(FindCar<board_x_5_4, X>::row == 5, "x 5 4 ");
+    static_assert(FindCar<board_x_5_4, X>::column == 4, "x 5 4 ");
+    static_assert(FindCar<board_x_5_0, X>::row == 5, "x 5 0 ");
+    static_assert(FindCar<board_x_5_0, X>::column == 0, "x 5 0 ");
+
+
     typedef  List<
             List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0> >,
             List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2> >
@@ -379,16 +391,16 @@ int main()
             List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>, BoardCell<  A  ,UP    ,3> >
     > board_red_block_exit;
 
-    static_assert(CheckSolution<GameBoard<small_board_x_0_0>>::result, "");
-    static_assert(CheckSolution<GameBoard<board_x_0_0>>::result, "");
-    static_assert(CheckSolution<GameBoard<board_x_0_4>>::result, "");
-    static_assert(CheckSolution<GameBoard<board_x_3_0>>::result, "");
-    static_assert(CheckSolution<GameBoard<board_x_5_4>>::result, "");
-    static_assert(CheckSolution<GameBoard<board_x_5_0>>::result, "");
+    static_assert(CheckWin<GameBoard<small_board_x_0_0>>::result, "");
+    static_assert(CheckWin<GameBoard<board_x_0_0>>::result, "");
+    static_assert(CheckWin<GameBoard<board_x_0_4>>::result, "");
+    static_assert(CheckWin<GameBoard<board_x_3_0>>::result, "");
+    static_assert(CheckWin<GameBoard<board_x_5_4>>::result, "");
+    static_assert(CheckWin<GameBoard<board_x_5_0>>::result, "");
 
-    static_assert(CheckSolution<GameBoard<board_red_block_near>>::result == false, "");
-    static_assert(CheckSolution<GameBoard<board_red_block_far>>::result == false, "");
-    static_assert(CheckSolution<GameBoard<board_red_block_exit>>::result == false, "");
+    static_assert(CheckWin<GameBoard<board_red_block_near>>::result == false, "");
+    static_assert(CheckWin<GameBoard<board_red_block_far>>::result == false, "");
+    static_assert(CheckWin<GameBoard<board_red_block_exit>>::result == false, "");
 
     std::cout << std::endl << "Passed!" << std::endl << std::endl;
     return 0;

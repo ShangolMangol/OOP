@@ -22,6 +22,7 @@ int main(){
     typedef MoveVehicle<gameBoard, 2, 3, LEFT, 2>::board b1; // Valid move
     static_assert(CheckSolution<gameBoard, moves>::result, "Fail"); // Game should be solved
 
+    std::cout << "Passed" << std::endl;
     return 0;
 }
 

@@ -11,12 +11,12 @@
 #include "MoveVehicle.h"
 
 
-//region find car x
-template<typename List>
-struct FindRedCarList;
+//region find car, redCar
+template<typename List, CellType carType>
+struct FindCarList;
 
-template<>
-struct FindRedCarList<List<>>
+template<CellType CarType>
+struct FindCarList<List<>, CarType>
 {
     static constexpr bool found = false;
     static constexpr int index = -1;
@@ -24,48 +24,57 @@ struct FindRedCarList<List<>>
 
 };
 
-template<typename Item, typename... TT>
-struct FindRedCarList<List<Item, TT...>>
+template<typename Item, typename... TT, CellType CarType>
+struct FindCarList<List<Item, TT...>,CarType>
 {
     static constexpr bool found = ConditionalInteger<
-                Item::type == X,
+                Item::type == CarType,
                 true,
-                FindRedCarList<List<TT...>>::found
+                FindCarList<List<TT...>,CarType>::found
             >::value;
 
     static constexpr int index = ConditionalInteger<
-            Item::type == X,
+            Item::type == CarType,
             0,
-            1 + FindRedCarList<List<TT...>>::index
+            1 + FindCarList<List<TT...>,CarType>::index
             >::value;
 };
 
 
-template<typename Lists>
-struct FindRedCar;
+template<typename Lists,CellType CarType>
+struct FindCar;
 
-template<>
-struct FindRedCar<List<>>
+template<CellType CarType>
+struct FindCar<List<>,CarType>
 {
     static constexpr int row = -1;
     static constexpr int column = -1;
 };
 
-template<typename Row, typename...Lists>
-struct FindRedCar<List<Row, Lists...>>
+template<typename Row, typename...Lists,CellType CarType>
+struct FindCar<List<Row, Lists...>,CarType>
 {
     static constexpr int row = ConditionalInteger<
-                                    FindRedCarList<Row>::found,
+                                    FindCarList<Row,CarType>::found,
                                     0,
-                                    1 + FindRedCar<List<Lists...>>::row
+                                    1 + FindCar<List<Lists...>,CarType>::row
                                 >::value;
 
     static constexpr int column = ConditionalInteger<
-                                        FindRedCarList<Row>::found,
-                                        FindRedCarList<Row>::index,
-                                        FindRedCar<List<Lists...>>::column
+                                        FindCarList<Row,CarType>::found,
+                                        FindCarList<Row,CarType>::index,
+                                        FindCar<List<Lists...>,CarType>::column
                                     >::value;
 };
+
+
+template<typename Lists>
+struct FindRedCar
+{
+    static constexpr int row = FindCar<Lists, X>::row;
+    static constexpr int column = FindCar<Lists, X>::column;
+};
+
 
 
 
@@ -122,19 +131,37 @@ struct IsAllEmpty<List<Rows...>>
 
 //region check solution
 template<typename Board>
-struct CheckSolution;
+struct CheckWin;
 
 template<typename... Lists>
-struct CheckSolution<GameBoard<Lists...>>
+struct CheckWin<GameBoard<Lists...>>
 {
     static constexpr bool result = IsAllEmpty<Lists...>::isEmpty;
 };
 
 //endregion
 
+template<typename Board, typename MovesList>
+struct CheckSolution;
 
+template<typename Board>
+struct CheckSolution<Board, List<>>
+{
+    static constexpr bool result = CheckWin<Board>::result;
+};
 
-
+template<typename ListLists, typename MoveItem,typename... Moves>
+struct CheckSolution<GameBoard<ListLists>, List<MoveItem, Moves...>>
+{
+    static constexpr bool result = CheckSolution<
+                typename MoveVehicle<GameBoard<ListLists>,
+                        FindCar<ListLists, MoveItem::type>::row,
+                        FindCar<ListLists, MoveItem::type>::column,
+                        MoveItem::direction,
+                        MoveItem::amount>::board,
+                List<Moves...>>
+            ::result;
+};
 
 
 
