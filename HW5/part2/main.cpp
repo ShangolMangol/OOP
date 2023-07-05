@@ -1,11 +1,14 @@
 #include <iostream>
 #include <cassert>
+#include <typeinfo>
+
 
 #include "List.h"
-#include "Conditional.h"
+#include "Utilities.h"
 #include "BoardCell.h"
 #include "MoveVehicle.h"
 #include "RushHour.h"
+
 
 
 template<int T>
@@ -207,7 +210,7 @@ int main()
             List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
             List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
             List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2 >,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
-            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
             List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell< EMPTY,UP,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >
     >> gameBoardBUp;
 
@@ -232,7 +235,7 @@ int main()
     typedef GameBoard< List<
             List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
             List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<  O  ,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
-            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,LEFT ,2>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<  O  ,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
             List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
             List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,DOWN ,2>,  BoardCell<  P  ,RIGHT,3>,  BoardCell<  P  ,RIGHT,3>, BoardCell<  P  ,LEFT  ,3> >,
             List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  B  ,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  C  ,RIGHT,2>, BoardCell<  C  ,LEFT  ,2> >

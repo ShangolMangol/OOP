@@ -1,9 +1,5 @@
-//
-// Created by regev on 04/07/2023.
-//
-
-#ifndef PART2_CONDITIONAL_H
-#define PART2_CONDITIONAL_H
+#ifndef PART2_UTILITIES_H
+#define PART2_UTILITIES_H
 
 template<bool Cond, typename IfTrue, typename IfFalse>
 struct Conditional;
@@ -36,4 +32,4 @@ struct ConditionalInteger<false, IfTrue, IfFalse>
     static constexpr int value = IfFalse;
 };
 
-#endif //PART2_CONDITIONAL_H
+#endif //PART2_UTILITIES_H
