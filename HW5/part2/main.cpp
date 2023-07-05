@@ -5,6 +5,7 @@
 #include "Conditional.h"
 #include "BoardCell.h"
 #include "MoveVehicle.h"
+#include "RushHour.h"
 
 
 template<int T>
@@ -281,10 +282,113 @@ int main()
     >> gameBoardCarCrashNOT;
 
     assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 1>::board) == typeid(gameBoardCarCrashNOT));
-//    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,0, LEFT, 1>::board) == typeid(gameBoardCarCrashNOT));
-//    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 2>::board) == typeid(gameBoardCarCrashNOT));
-//    assert(typeid(MoveVehicle<gameBoardCarCrash, 3,1, UP, 2>::board) == typeid(gameBoardCarCrashNOT));
+    //    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,0, LEFT, 1>::board) == typeid(gameBoardCarCrashNOT));
+    //    assert(typeid(MoveVehicle<gameBoardCarCrash, 0,1, DOWN, 2>::board) == typeid(gameBoardCarCrashNOT));
+    //    assert(typeid(MoveVehicle<gameBoardCarCrash, 3,1, UP, 2>::board) == typeid(gameBoardCarCrashNOT));
 
+
+    typedef List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,2>, BoardCell<EMPTY,LEFT  ,2> >
+    > board_x_3_0;
+
+    typedef  List<
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,2>, BoardCell<EMPTY,LEFT  ,2> >
+    > board_x_0_0;
+
+
+    typedef  List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  X  ,RIGHT,2>, BoardCell<  X  ,RIGHT,2> >
+    > board_x_5_4;
+
+
+    typedef List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  X  ,RIGHT,2>, BoardCell<  X  ,RIGHT,2> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,2>, BoardCell<EMPTY,LEFT  ,2> >
+    > board_x_0_4;
+
+    typedef List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT ,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,2>, BoardCell<EMPTY,LEFT  ,2> >
+    > board_x_5_0;
+
+    static_assert(FindRedCar<board_x_0_0>::row == 0, "x 0 0 ");
+    static_assert(FindRedCar<board_x_0_0>::column == 0, "x 0 0 ");
+    static_assert(FindRedCar<board_x_0_4>::row == 0, "x 0 4 ");
+    static_assert(FindRedCar<board_x_0_4>::column == 4, "x 0 4 ");
+    static_assert(FindRedCar<board_x_3_0>::row == 3, "x 3 0 ");
+    static_assert(FindRedCar<board_x_3_0>::column == 0, "x 3 0 ");
+    static_assert(FindRedCar<board_x_5_4>::row == 5, "x 5 4 ");
+    static_assert(FindRedCar<board_x_5_4>::column == 4, "x 5 4 ");
+    static_assert(FindRedCar<board_x_5_0>::row == 5, "x 5 0 ");
+    static_assert(FindRedCar<board_x_5_0>::column == 0, "x 5 0 ");
+
+
+    typedef  List<
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,RIGHT,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2> >
+    > small_board_x_0_0;
+
+    typedef List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT ,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2>,  BoardCell<EMPTY,RIGHT,2>, BoardCell<EMPTY,LEFT  ,2> >
+    > board_red_block_near;
+
+    typedef List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT ,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<EMPTY,LEFT  ,3> >,
+            List< BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<EMPTY,UP   ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<  A  ,RIGHT,2>,  BoardCell<  A  ,LEFT ,2> >
+    > board_red_block_far;
+
+
+    typedef List<
+            List< BoardCell<EMPTY,RIGHT,1>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT ,0>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,DOWN ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,UP   ,0>,  BoardCell<EMPTY,RIGHT,2>,  BoardCell<EMPTY,LEFT ,2>,  BoardCell<EMPTY,UP   ,3>, BoardCell<EMPTY,RIGHT ,0> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,RIGHT,0>, BoardCell<  A  ,UP    ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,RIGHT,3>,  BoardCell<EMPTY,RIGHT,3>, BoardCell<  A  ,UP    ,3> >,
+            List< BoardCell<EMPTY,RIGHT,0>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<EMPTY,DOWN ,2>,  BoardCell<  X  ,RIGHT,2>,  BoardCell<  X  ,RIGHT,2>, BoardCell<  A  ,UP    ,3> >
+    > board_red_block_exit;
+
+    static_assert(CheckSolution<GameBoard<small_board_x_0_0>>::result, "");
+    static_assert(CheckSolution<GameBoard<board_x_0_0>>::result, "");
+    static_assert(CheckSolution<GameBoard<board_x_0_4>>::result, "");
+    static_assert(CheckSolution<GameBoard<board_x_3_0>>::result, "");
+    static_assert(CheckSolution<GameBoard<board_x_5_4>>::result, "");
+    static_assert(CheckSolution<GameBoard<board_x_5_0>>::result, "");
+
+    static_assert(CheckSolution<GameBoard<board_red_block_near>>::result == false, "");
+    static_assert(CheckSolution<GameBoard<board_red_block_far>>::result == false, "");
+    static_assert(CheckSolution<GameBoard<board_red_block_exit>>::result == false, "");
 
     std::cout << std::endl << "Passed!" << std::endl << std::endl;
     return 0;
